@@ -14,12 +14,15 @@ _acquire_token() {
 }
 
 # Fetch key vault secret.
-_get_keyvault_secret() {
+_set_keyvault_secret() {
 
     # Get a new token each time you access key vault.
     _acquire_token
 
-    _keyvault_secret_bundle=$(curl -H "Authorization: Bearer $AUTH_TOKEN" -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/$1/?api-version=7.0)
+    _keyvault_secret_bundle=$(curl -v -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $AUTH_TOKEN" -d "{\"value\": $1}"  -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/authEnabled/?api-version=7.0)
+    _keyvault_secret_bundle="'$_keyvault_secret_bundle'"
+
+    _keyvault_secret_bundle=$(curl -v -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $AUTH_TOKEN" -d "{\"value\": $2}"  -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/corsWhitelist/?api-version=7.0)
     _keyvault_secret_bundle="'$_keyvault_secret_bundle'"
 
     # return the secret value.
@@ -31,7 +34,7 @@ _get_keyvault_secret() {
 __set_keyvault_auth_server() {
 
     # Bare (unauthenticated) request to get secret.
-    key_vault_wo_auth_call=$(curl -i -L "https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/authEnabled/?api-version=7.0" | grep -Fi WWW-Authenticate)
+    key_vault_wo_auth_call=$(curl -i "https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/authEnabled/?api-version=7.0" | grep 'www.*')
 
     wo_auth_call_resp_header=${key_vault_wo_auth_call#*:}
 
@@ -78,17 +81,11 @@ __parse_json() {
 
 set_env_vars() {
     # parse through all variables (Every odd variable is env var name & even variables are secret key names in Key vault).
-    while test ${#} -gt 0
-    do
-        _key=$1
-        _value=$(_get_keyvault_secret $2)
-
-        # export in current shell
-        export $_key=$_value
-
-        shift
-        shift
-    done
+    if [ "$1" == "enable" ]; then
+        _set_keyvault_secret "true" "{ 'origins': ['*'], 'methods': ['*'], 'headers': ['*'] }"
+    else
+        _set_keyvault_secret "false" ""
+    fi
 }
 
 main() {
