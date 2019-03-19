@@ -19,7 +19,7 @@ _get_keyvault_secret() {
     # Get a new token each time you access key vault.
     _acquire_token
 
-    if [ "$1" == "" ]; then
+    if [ "$1" == "-" ]; then
         echo ""
     else
         _keyvault_secret_bundle=$(curl -H "Authorization: Bearer $AUTH_TOKEN" -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/$1/?api-version=7.0)
@@ -81,13 +81,13 @@ __parse_json() {
 ############# Main function #############
 
 set_app_id() {
-  sed -i "s~appId.*~appId: '$PCS_AAD_APPID'~g" /app/webui-config.js
+  sed -i "s~appId.*~appId: '$PCS_AAD_APPID,'~g" /app/webui-config.js
 }
 
 modify_webui_config() {
 
   if [ "$1" == "AUTH" ]; then
-    sed -i "s/authEnabled.*/authEnabled: '$2',/g" /app/webui-config.js
+    sed -i "s/authEnabled.*/authEnabled: $2,/g" /app/webui-config.js
   fi
 
   if [ "$1" == "TENANT" ]; then
@@ -95,7 +95,7 @@ modify_webui_config() {
   fi
 
   if [ "$1" == "INSTANCE_URL" ]; then
-    if [ "$2" == "-" ]; then
+    if [ "$2" == "" ]; then
       sed -i "s~instance.*~instance: 'https\:\/\/login\.microsoftonline\.com\/'~g" /app/webui-config.js
     else
       sed -i "s~instance.*~instance: '$2'~g" /app/webui-config.js

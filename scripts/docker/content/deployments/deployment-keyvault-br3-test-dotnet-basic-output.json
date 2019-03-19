@@ -1,0 +1,6 @@
+{
+  "aadAppUrl": "https://portal.azure.com/iotsl.onmicrosoft.com#blade/Microsoft_AAD_IAM/ApplicationBlade/objectId/0f569e44-05cb-4fe9-b957-f1aa9f00af53/appId/e36a6057-d979-44c5-b055-a0c050430cab",
+  "resourceGroupUrl": "https://portal.azure.com/iotsl.onmicrosoft.com#resource/subscriptions/d7ca9718-3a3c-4ce8-8ec9-76a6396c0206/resourceGroups/keyvault-br3-test-dotnet-basic",
+  "troubleshootingGuide": "https://aka.ms/iot-rm-tsg",
+  "website": "https://keyvault-br3-test-dotnet-basic.azurewebsites.net"
+}
