@@ -3,7 +3,7 @@ set -e
 
 # call in current shell.
 echo "Creating/Updating web config"
-. set_env.sh AUTH authRequired TENANT aadTenantId INSTANCE_URL "-"
+. /app/set_env.sh AUTH authRequired TENANT aadTenantId INSTANCE_URL "-"
 
 echo "Starting server"
 # serve the app via nginx
