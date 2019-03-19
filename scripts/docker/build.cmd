@@ -33,6 +33,7 @@ cd %APP_HOME%
     xcopy /s src\*       out\docker\src\
     xcopy /s public\*    out\docker\public\
 
+    copy public\webui-config.js                     out\docker\
     copy scripts\docker\.dockerignore               out\docker\
     copy scripts\docker\Dockerfile                  out\docker\
     copy scripts\docker\content\run.sh              out\docker\

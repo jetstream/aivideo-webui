@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Copyright (c) Microsoft. All rights reserved.
 
 AUTH_SERVER_URL=""
@@ -19,11 +19,15 @@ _get_keyvault_secret() {
     # Get a new token each time you access key vault.
     _acquire_token
 
-    _keyvault_secret_bundle=$(curl -H "Authorization: Bearer $AUTH_TOKEN" -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/$1/?api-version=7.0)
-    _keyvault_secret_bundle="'$_keyvault_secret_bundle'"
+    if [ "$1" == "" ]; then
+        echo ""
+    else
+        _keyvault_secret_bundle=$(curl -H "Authorization: Bearer $AUTH_TOKEN" -L https://$PCS_KEYVAULT_NAME.vault.azure.net/secrets/$1/?api-version=7.0)
+        _keyvault_secret_bundle="'$_keyvault_secret_bundle'"
 
-    # return the secret value.
-    echo $(__parse_json $_keyvault_secret_bundle "value")
+        # return the secret value.
+        echo $(__parse_json $_keyvault_secret_bundle "value")
+    fi
 }
 
 # Gets keyvault auth server by examining response headers of unauthenticated request to key vault.
@@ -70,25 +74,52 @@ __extract_value_from_double_quotes() {
 }
 
 __parse_json() {
-  _temp=`echo $1 | sed 's/\\\\\//\//g' | sed 's/[{}]//g' | awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]}' | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w $2`;
+  local _temp=`echo $1 | sed 's/\\\\\//\//g' | sed 's/[{}]//g' | awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]}' | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w $2`;
   echo ${_temp##*|};
 }
 
 ############# Main function #############
 
+set_app_id() {
+  sed -i "s~appId.*~appId: '$PCS_AAD_APPID'~g" /app/webui-config.js
+}
+
+modify_webui_config() {
+
+  if [ "$1" == "AUTH" ]; then
+    sed -i "s/authEnabled.*/authEnabled: '$2',/g" /app/webui-config.js
+  fi
+
+  if [ "$1" == "TENANT" ]; then
+    sed -i "s/tenant.*/tenant: '$2',/g" /app/webui-config.js
+  fi
+
+  if [ "$1" == "INSTANCE_URL" ]; then
+    if [ "$2" == "-" ]; then
+      sed -i "s~instance.*~instance: 'https\:\/\/login\.microsoftonline\.com\/'~g" /app/webui-config.js
+    else
+      sed -i "s~instance.*~instance: '$2'~g" /app/webui-config.js
+    fi
+  fi
+}
+
 set_env_vars() {
-    # parse through all variables (Every odd variable is env var name & even variables are secret key names in Key vault).
-    while test ${#} -gt 0
-    do
-        _key=$1
-        _value=$(_get_keyvault_secret $2)
 
-        # export in current shell
-        export $_key=$_value
+  # set app id in webui-config
+  set_app_id
 
-        shift
-        shift
-    done
+  # parse through all variables (Every odd variable is env var name & even variables are secret key names in Key vault).
+  while test ${#} -gt 0
+  do
+      _key=$1
+      _value=$(_get_keyvault_secret $2)
+
+      # change webui config
+      modify_webui_config $_key $_value
+
+      shift
+      shift
+  done
 }
 
 main() {
