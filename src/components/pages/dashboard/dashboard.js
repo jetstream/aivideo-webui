@@ -16,6 +16,7 @@ import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'component
 import {
   OverviewPanel,
   AlertsPanelContainer as AlertsPanel,
+  InsightsPanelContainer as InsightsPanel,
   TelemetryPanel,
   AnalyticsPanel,
   MapPanelContainer as MapPanel,
@@ -393,6 +394,11 @@ export class Dashboard extends Component {
         </ContextMenu>
         <PageContent className="dashboard-container">
           <Grid>
+            <Cell className="col-5">
+              <InsightsPanel
+              error={rulesError || analyticsError}
+              t={t} />
+            </Cell>
             <Cell className="col-1 devices-overview-cell">
               <OverviewPanel
                 activeDeviceGroup={activeDeviceGroup}

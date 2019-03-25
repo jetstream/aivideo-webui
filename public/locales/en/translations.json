@@ -180,6 +180,9 @@
         "currentWindow": "Currently",
         "previousWindow": "Previously"
       },
+      "insights": {
+        "header": "Insights from video stream on device"
+      },
       "map": {
         "header": "Device locations",
         "runtimeError": "An error occurred while rendering the map",
