@@ -16,6 +16,7 @@ import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'component
 import {
   OverviewPanel,
   AlertsPanelContainer as AlertsPanel,
+  EventsPanelContainer as EventsPanel,
   InsightsPanelContainer as InsightsPanel,
   TelemetryPanel,
   AnalyticsPanel,
@@ -371,6 +372,12 @@ export class Dashboard extends Component {
       };
     }, {});
 
+      const fakeEvents = [
+        { id: 900, event: "event1", time: moment() },
+        { id: 901, event: "event2", time: moment() },
+        { id: 902, event: "event3", time: moment() }
+      ];
+
     return (
       <ComponentArray>
         <ContextMenu>
@@ -398,6 +405,14 @@ export class Dashboard extends Component {
               <InsightsPanel
               error={rulesError || analyticsError}
               t={t} />
+            </Cell>
+            <Cell className="col-3">
+              <EventsPanel
+                events={fakeEvents}
+                isPending={analyticsIsPending || rulesIsPending}
+                error={rulesError || analyticsError}
+                t={t}
+                deviceGroups={deviceGroups} />
             </Cell>
             <Cell className="col-1 devices-overview-cell">
               <OverviewPanel

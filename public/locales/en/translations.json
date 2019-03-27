@@ -180,6 +180,9 @@
         "currentWindow": "Currently",
         "previousWindow": "Previously"
       },
+      "events": {
+        "header": "Raw events from AI on edge device"
+      },
       "insights": {
         "header": "Insights from video stream on device"
       },
@@ -445,7 +448,9 @@
       "count": "Count",
       "lastTrigger": "Last trigger",
       "maintenanceLog": "Maintenance log",
-      "explore": "Explore"
+      "explore": "Explore",
+      "eventName": "Event",
+      "eventTime": "Time"
     },
     "flyouts": {
       "edit": "Edit",
