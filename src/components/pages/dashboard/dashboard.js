@@ -17,7 +17,6 @@ import {
   OverviewPanel,
   AlertsPanelContainer as AlertsPanel,
   InsightsPanelContainer as InsightsPanel,
-  EventsPanelContainer as EventsPanel,
   TelemetryPanel,
   AnalyticsPanel,
   MapPanelContainer as MapPanel,
@@ -399,14 +398,6 @@ export class Dashboard extends Component {
               <InsightsPanel
               error={rulesError || analyticsError}
               t={t} />
-            </Cell>
-            <Cell className="col-3">
-              <EventsPanel
-                events={currentActiveAlertsWithName}
-                isPending={analyticsIsPending || rulesIsPending}
-                error={rulesError || analyticsError}
-                t={t}
-                deviceGroups={deviceGroups} />
             </Cell>
             <Cell className="col-1 devices-overview-cell">
               <OverviewPanel
