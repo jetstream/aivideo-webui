@@ -13,6 +13,8 @@ import {
 } from 'components/pages/dashboard/panel';
 import { toDiagnosticsModel } from 'services/models';
 
+import './insightsPanel.scss';
+
 export class InsightsPanel extends Component {
 
 
