@@ -9,21 +9,14 @@ import { TelemetryService } from 'services';
 import { permissions } from 'services/models';
 import { compareByProperty, getIntervalParams, retryHandler } from 'utilities';
 import { Grid, Cell } from './grid';
-import { PanelErrorBoundary } from './panel';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
 import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'components/shell/timeIntervalDropdown';
 import {
-  OverviewPanel,
-  AlertsPanelContainer as AlertsPanel,
   EventsPanelContainer as EventsPanel,
   InsightsPanelContainer as InsightsPanel,
-  TelemetryPanel,
-  AnalyticsPanel,
-  MapPanelContainer as MapPanel,
   ExamplePanel,
   transformTelemetryResponse,
-  chartColorObjects
 } from './panels';
 import {
   ComponentArray,
@@ -280,21 +273,11 @@ export class Dashboard extends Component {
 
   render() {
     const {
-      theme,
       timeInterval,
-      timeSeriesExplorerUrl,
 
-      azureMapsKey,
-      azureMapsKeyError,
-      azureMapsKeyIsPending,
-
-      devices,
-      devicesError,
       devicesIsPending,
 
-      activeDeviceGroup,
       deviceGroups,
-      deviceGroupError,
 
       rules,
       rulesError,
@@ -302,56 +285,13 @@ export class Dashboard extends Component {
       t
     } = this.props;
     const {
-      telemetry,
-      telemetryIsPending,
-      telemetryError,
-
-      analyticsVersion,
       currentActiveAlerts,
       topAlerts,
-      alertsPerDeviceId,
-      criticalAlertsChange,
       analyticsIsPending,
       analyticsError,
 
-      openWarningCount,
-      openCriticalCount,
-
-      devicesInAlert,
-
       lastRefreshed
     } = this.state;
-
-    // Count the number of online and offline devices
-    const deviceIds = Object.keys(devices);
-    const onlineDeviceCount =
-      deviceIds.length
-        ? deviceIds.reduce((count, deviceId) => devices[deviceId].connected ? count + 1 : count, 0)
-        : undefined;
-    const offlineDeviceCount =
-      deviceIds.length
-        ? deviceIds.length - onlineDeviceCount
-        : undefined;
-
-    // Add parameters to Time Series Insights Url
-    const timeSeriesParamUrl =
-      timeSeriesExplorerUrl
-        ? timeSeriesExplorerUrl + '&relativeMillis=1800000&timeSeriesDefinitions=[{"name":"Devices","splitBy":"iothub-connection-device-id"}]'
-        : undefined;
-
-    // Add the alert rule name to the list of top alerts
-    const topAlertsWithName = topAlerts.map(alert => ({
-      ...alert,
-      name: (rules[alert.ruleId] || {}).name || alert.ruleId,
-    }));
-
-    // Add the alert rule name to the list of currently active alerts
-    const currentActiveAlertsWithName = currentActiveAlerts.map(alert => ({
-      ...alert,
-      name: (rules[alert.ruleId] || {}).name || alert.ruleId,
-      // limit the number shown in the UI to 1000 active
-      count: Math.min(alert.count, Config.maxAlertsCount)
-    }));
 
     // Determine if the rules for all of the alerts are actually loaded.
     const unloadedRules =
@@ -362,15 +302,6 @@ export class Dashboard extends Component {
       this.refreshRules();
     }
 
-
-    // Convert the list of alerts by device id to alerts by device type
-    const alertsPerDeviceType = Object.keys(alertsPerDeviceId).reduce((acc, deviceId) => {
-      const deviceType = (devices[deviceId] || {}).type || deviceId;
-      return {
-        ...acc,
-        [deviceType]: (acc[deviceType] || 0) + alertsPerDeviceId[deviceId]
-      };
-    }, {});
 
       const fakeEvents = [
         { id: 900, event: "event1", time: moment() },
@@ -414,61 +345,7 @@ export class Dashboard extends Component {
                 t={t}
                 deviceGroups={deviceGroups} />
             </Cell>
-            <Cell className="col-1 devices-overview-cell">
-              <OverviewPanel
-                activeDeviceGroup={activeDeviceGroup}
-                openWarningCount={openWarningCount}
-                openCriticalCount={openCriticalCount}
-                onlineDeviceCount={onlineDeviceCount}
-                offlineDeviceCount={offlineDeviceCount}
-                isPending={analyticsIsPending || devicesIsPending}
-                error={deviceGroupError || devicesError || analyticsError}
-                t={t} />
-            </Cell>
-            <Cell className="col-5">
-              <PanelErrorBoundary msg={t('dashboard.panels.map.runtimeError')}>
-                <MapPanel
-                  analyticsVersion={analyticsVersion}
-                  azureMapsKey={azureMapsKey}
-                  devices={devices}
-                  devicesInAlert={devicesInAlert}
-                  mapKeyIsPending={azureMapsKeyIsPending}
-                  isPending={devicesIsPending || analyticsIsPending}
-                  error={azureMapsKeyError || devicesError || analyticsError}
-                  t={t} />
-              </PanelErrorBoundary>
-            </Cell>
-            <Cell className="col-3">
-              <AlertsPanel
-                alerts={currentActiveAlertsWithName}
-                isPending={analyticsIsPending || rulesIsPending}
-                error={rulesError || analyticsError}
-                t={t}
-                deviceGroups={deviceGroups} />
-            </Cell>
-            <Cell className="col-6">
-              <TelemetryPanel
-                timeSeriesExplorerUrl={timeSeriesParamUrl}
-                telemetry={telemetry}
-                isPending={telemetryIsPending}
-                lastRefreshed={lastRefreshed}
-                error={deviceGroupError || telemetryError}
-                theme={theme}
-                colors={chartColorObjects}
-                t={t} />
-            </Cell>
-            <Cell className="col-4">
-              <AnalyticsPanel
-                timeSeriesExplorerUrl={timeSeriesParamUrl}
-                topAlerts={topAlertsWithName}
-                alertsPerDeviceId={alertsPerDeviceType}
-                criticalAlertsChange={criticalAlertsChange}
-                isPending={analyticsIsPending || rulesIsPending || devicesIsPending}
-                error={devicesError || rulesError || analyticsError}
-                theme={theme}
-                colors={chartColorObjects}
-                t={t} />
-            </Cell>
+
             {
               Config.showWalkthroughExamples &&
               <Cell className="col-4">
