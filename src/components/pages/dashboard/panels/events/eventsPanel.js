@@ -51,7 +51,7 @@ export class EventsPanel extends Component {
       t
     };
     const showOverlay = isPending && !events.length;
-    console.log("EVENT GRIDPROP ", gridProps);
+
     return (
       <Panel className="events-panel-container">
         <PanelHeader>
