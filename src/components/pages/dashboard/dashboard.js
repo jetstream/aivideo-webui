@@ -15,6 +15,7 @@ import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'component
 import {
   EventsPanelContainer as EventsPanel,
   InsightsPanelContainer as InsightsPanel,
+  RulesPanelContainer as RulesPanel,
   ExamplePanel,
   transformTelemetryResponse,
 } from './panels';
@@ -345,7 +346,11 @@ export class Dashboard extends Component {
                 t={t}
                 deviceGroups={deviceGroups} />
             </Cell>
-
+            <Cell className="col-5">
+              <RulesPanel
+              error={rulesError || analyticsError}
+              t={t} />
+            </Cell>
             {
               Config.showWalkthroughExamples &&
               <Cell className="col-4">

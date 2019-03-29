@@ -186,6 +186,9 @@
       "insights": {
         "header": "Insights from video stream on device"
       },
+      "rules": {
+        "header": "Alerts from rules"
+      },
       "map": {
         "header": "Device locations",
         "runtimeError": "An error occurred while rendering the map",
