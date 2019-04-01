@@ -10,6 +10,10 @@
   flex-flow: column nowrap;
   align-items: stretch;
 
+  .innerGrid {
+    width: 100%;
+  }
+
   .grid-container {
     padding: 10px;
 

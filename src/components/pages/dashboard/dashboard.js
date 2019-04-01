@@ -307,7 +307,13 @@ export class Dashboard extends Component {
       const fakeEvents = [
         { id: 900, event: "event1", time: moment() },
         { id: 901, event: "event2", time: moment() },
-        { id: 902, event: "event3", time: moment() }
+        { id: 902, event: "event3", time: moment() },
+        { id: 903, event: "event4", time: moment() },
+        { id: 904, event: "event5", time: moment() },
+        { id: 905, event: "event6", time: moment() },
+        { id: 906, event: "event7", time: moment() },
+        { id: 907, event: "event8", time: moment() },
+        { id: 908, event: "event9", time: moment() }
       ];
 
     return (
@@ -334,9 +340,20 @@ export class Dashboard extends Component {
         <PageContent className="dashboard-container">
           <Grid>
             <Cell className="col-5">
-              <InsightsPanel
-              error={rulesError || analyticsError}
-              t={t} />
+              <div className="innerGrid">
+                <Grid>
+                  <Cell  className="col-8">
+                    <InsightsPanel
+                    error={rulesError || analyticsError}
+                    t={t} />
+                  </Cell>
+                  <Cell className="col-8">
+                    <RulesPanel
+                    error={rulesError || analyticsError}
+                    t={t} />
+                </Cell>
+                </Grid>
+              </div>
             </Cell>
             <Cell className="col-3">
               <EventsPanel
@@ -345,11 +362,6 @@ export class Dashboard extends Component {
                 error={rulesError || analyticsError}
                 t={t}
                 deviceGroups={deviceGroups} />
-            </Cell>
-            <Cell className="col-5">
-              <RulesPanel
-              error={rulesError || analyticsError}
-              t={t} />
             </Cell>
             {
               Config.showWalkthroughExamples &&
