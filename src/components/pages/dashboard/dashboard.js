@@ -17,7 +17,6 @@ import {
   InsightsPanelContainer as InsightsPanel,
   RulesPanelContainer as RulesPanel,
   ExamplePanel,
-  transformTelemetryResponse,
 } from './panels';
 import {
   ComponentArray,
@@ -32,7 +31,7 @@ import './dashboard.scss';
 
 const initialState = {
   // Telemetry data
-  telemetry: {},
+  telemetry: [],
   telemetryIsPending: true,
   telemetryError: null,
 
@@ -74,6 +73,23 @@ export class Dashboard extends Component {
     this.props.updateCurrentWindow('Dashboard');
   }
 
+  mergeAndTrimTelemetryMessages = (messages, updates) => {
+    // messages and updates arrive in descending order
+    // There is a mismatch in how Azure returns time strings and moment.toJSON(),
+    // but the mismatch is only in the time zone spec, so it won't break the comparison.
+    const oldAgeLimit = moment().subtract(15, 'm').toJSON();
+    if (updates.length > 0) {
+      // Remove all of the old messages that are newer than the oldest update message
+      const updateTimeLimit = updates[updates.length - 1].time;
+      const timeFilteredMessages = messages.filter(
+        item => item.time < updateTimeLimit && item.time > oldAgeLimit);
+      const result = [...updates, ...timeFilteredMessages];
+      return result;
+    }
+    // If there are no updates, just filter old messages out of the original array
+    return messages.filter(item => item.time > oldAgeLimit);
+  }
+
   componentDidMount() {
     // Ensure the rules are loaded
     this.refreshRules();
@@ -82,13 +98,15 @@ export class Dashboard extends Component {
     const onPendingStart = () => this.setState({ telemetryIsPending: true });
 
     const getTelemetryStream = ({ deviceIds = [] }) => TelemetryService.getTelemetryByDeviceIdP15M(deviceIds)
+      .map(response => ({ initial: response }) )
       .merge(
         this.telemetryRefresh$ // Previous request complete
           .delay(Config.telemetryRefreshInterval) // Wait to refresh
           .do(onPendingStart)
           .flatMap(_ => TelemetryService.getTelemetryByDeviceIdP1M(deviceIds))
-      )
-      .flatMap(transformTelemetryResponse(() => this.state.telemetry))
+          .map(response => ({ update: response }) )
+          )
+      //.flatMap(transformTelemetryResponse(() => this.state.telemetry))
       .map(telemetry => ({ telemetry, telemetryIsPending: false })) // Stream emits new state
       // Retry any retryable errors
       .retryWhen(retryHandler(maxRetryAttempts, retryWaitTime));
@@ -215,10 +233,26 @@ export class Dashboard extends Component {
       this.dashboardRefresh$
         .switchMap(getTelemetryStream)
         .subscribe(
-          telemetryState => this.setState(
-            { ...telemetryState, lastRefreshed: moment() },
-            () => this.telemetryRefresh$.next('r')
-          ),
+          telemetryState => {
+            const telemetry = telemetryState.telemetry.initial
+              // On the initial request we just set the local state
+              // to the returned array of telemetry messages
+              ? telemetryState.telemetry.initial
+              // On the 1Minute updates we merge the existing messages
+              // with the newer ones.
+              : this.mergeAndTrimTelemetryMessages(
+                  this.state.telemetry, telemetryState.telemetry.update);
+            this.setState(
+              {
+                telemetry: telemetry,
+                telemetryIsPending: telemetryState.telemetryIsPending,
+                lastRefreshed: moment() },
+              () => {
+                // After the state update is complete, trigger a telemetry update call
+                this.telemetryRefresh$.next('r')
+              }
+            )
+          },
           telemetryError => this.setState({ telemetryError, telemetryIsPending: false })
         )
     );
@@ -290,6 +324,8 @@ export class Dashboard extends Component {
       topAlerts,
       analyticsIsPending,
       analyticsError,
+
+      telemetry,
 
       lastRefreshed
     } = this.state;
