@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import React, { Component } from 'react';
-import defaultVideoImage from 'assets/images/placeholderVid.png';
 
 import { AjaxError } from 'components/shared';
 import {
@@ -23,16 +22,31 @@ export class InsightsPanel extends Component {
   }
 
   render() {
-    const { t, error } = this.props;
+    const { t, error, imageEvent } = this.props;
 
-    return (
-      <Panel className="insights-panel-container">
+    if (!imageEvent) {
+      return (
+        <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
         </PanelHeader>
         <PanelContent>
-          <img src={defaultVideoImage} alt=""></img>
+          loading...
+        </PanelContent>
+        { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
+      </Panel>
+      );
+    }
 
+    return (
+
+      <Panel className="insights-panel-container">
+        <PanelHeader>
+          <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
+          <PanelHeaderLabel>{imageEvent.deviceId}</PanelHeaderLabel>
+        </PanelHeader>
+        <PanelContent>
+          <img src={imageEvent.data.url} alt={imageEvent.data.url}></img>
         </PanelContent>
         { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
       </Panel>

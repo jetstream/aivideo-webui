@@ -12,7 +12,8 @@ import {
   PanelMsg,
   PanelOverlay
 } from 'components/pages/dashboard/panel';
-import { RulesGrid, rulesColumnDefs } from 'components/pages/rules/rulesGrid';
+import { TimeRenderer } from 'components/shared/cellRenderers';
+import { RulesGrid } from 'components/pages/rules/rulesGrid';
 import { toDiagnosticsModel } from 'services/models';
 import { translateColumnDefs } from 'utilities';
 
@@ -23,15 +24,16 @@ export class EventsPanel extends Component {
 
     this.columnDefs = [
       {
-        ...rulesColumnDefs.ruleName,
         headerName: 'rules.grid.eventName',
-        field: 'event',
+        field: 'data.orEvent',
         cellRendererFramework: undefined, // Hide soft select link
+        filter: 'text',
       },
       {
-        ...rulesColumnDefs.lastTrigger,
+        sort: 'desc',
         headerName: 'rules.grid.eventTime',
-        field: 'time'
+        field: 'time',
+        cellRendererFramework: TimeRenderer
       }
     ];
   }
@@ -40,11 +42,13 @@ export class EventsPanel extends Component {
     this.props.logEvent(toDiagnosticsModel('EventsPanel_ExploreClick', {}));
   }
 
+
   render() {
     const { t, events, isPending, error } = this.props;
+
     const gridProps = {
       columnDefs: translateColumnDefs(t, this.columnDefs),
-      rowData: events,
+      rowData: events.map((value, index) => { return { ...value, id: index};}),
       suppressFlyouts: true,
       domLayout: 'autoHeight',
       deltaRowDataMode: false,

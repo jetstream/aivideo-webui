@@ -339,19 +339,6 @@ export class Dashboard extends Component {
       this.refreshRules();
     }
 
-
-      const fakeEvents = [
-        { id: 900, event: "event1", time: moment() },
-        { id: 901, event: "event2", time: moment() },
-        { id: 902, event: "event3", time: moment() },
-        { id: 903, event: "event4", time: moment() },
-        { id: 904, event: "event5", time: moment() },
-        { id: 905, event: "event6", time: moment() },
-        { id: 906, event: "event7", time: moment() },
-        { id: 907, event: "event8", time: moment() },
-        { id: 908, event: "event9", time: moment() }
-      ];
-
     return (
       <ComponentArray>
         <ContextMenu>
@@ -380,6 +367,7 @@ export class Dashboard extends Component {
                 <Grid>
                   <Cell  className="col-8">
                     <InsightsPanel
+                    imageEvent={telemetry.length > 0 ? telemetry.find(x => x.data.hasOwnProperty('url')): null}
                     error={rulesError || analyticsError}
                     t={t} />
                   </Cell>
@@ -393,7 +381,7 @@ export class Dashboard extends Component {
             </Cell>
             <Cell className="col-3">
               <EventsPanel
-                events={fakeEvents}
+                events={telemetry.length > 0 ? telemetry.filter(x => x.data.hasOwnProperty('orEvent')): []}
                 isPending={analyticsIsPending || rulesIsPending}
                 error={rulesError || analyticsError}
                 t={t}
