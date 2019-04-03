@@ -12,6 +12,17 @@
 
   .innerGrid {
     width: 100%;
+
+    // this is so the left hand side lines up horizontally with the right
+    .grid-container {
+      padding: 0;
+    }
+
+    .grid-cell:first-of-type {
+      .grid-cell-contents:first-of-type {
+        margin-top: 0;
+      }
+    }
   }
 
   .grid-container {
