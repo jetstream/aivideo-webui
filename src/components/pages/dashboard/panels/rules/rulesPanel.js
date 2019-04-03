@@ -16,6 +16,8 @@ import { RulesGrid, rulesColumnDefs } from 'components/pages/rules/rulesGrid';
 import { toDiagnosticsModel } from 'services/models';
 import { translateColumnDefs } from 'utilities';
 
+import './rulesPanel.scss';
+
 export class RulesPanel extends Component {
 
   constructor(props) {
