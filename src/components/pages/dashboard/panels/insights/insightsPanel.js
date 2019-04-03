@@ -8,9 +8,11 @@ import {
   PanelContent,
   PanelError,
   PanelHeader,
-  PanelHeaderLabel
+  PanelHeaderLabel,
+  PanelMsg
 } from 'components/pages/dashboard/panel';
 import { toDiagnosticsModel } from 'services/models';
+import { DeviceListDropdownContainer as DeviceListDropdown } from 'components/shell/deviceListDropdown';
 
 import './insightsPanel.scss';
 
@@ -29,9 +31,12 @@ export class InsightsPanel extends Component {
         <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
+          <DeviceListDropdown />
         </PanelHeader>
         <PanelContent>
-          loading...
+        {
+          <PanelMsg>{t('dashboard.noData')}</PanelMsg>
+        }
         </PanelContent>
         { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
       </Panel>
@@ -43,7 +48,7 @@ export class InsightsPanel extends Component {
       <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
-          <PanelHeaderLabel>{imageEvent.deviceId}</PanelHeaderLabel>
+          <DeviceListDropdown />
         </PanelHeader>
         <PanelContent>
           <img src={imageEvent.data.url} alt={imageEvent.data.url}></img>

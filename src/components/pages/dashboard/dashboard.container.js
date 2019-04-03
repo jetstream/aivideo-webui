@@ -21,6 +21,7 @@ import {
   getRulesError
 } from 'store/reducers/rulesReducer';
 import {
+  getActiveDeviceId,
   getDevicesError,
   getDevicesLastUpdated,
   getDevicesPendingStatus,
@@ -30,6 +31,7 @@ import {
 import { Dashboard } from './dashboard';
 
 const mapStateToProps = state => ({
+  activeDeviceId: getActiveDeviceId(state),
   activeDeviceGroup: getActiveDeviceGroup(state),
   azureMapsKey: getAzureMapsKey(state),
   azureMapsKeyError: getSolutionSettingsError(state),

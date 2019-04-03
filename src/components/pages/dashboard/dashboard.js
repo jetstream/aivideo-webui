@@ -308,6 +308,7 @@ export class Dashboard extends Component {
 
   render() {
     const {
+      activeDeviceId,
       timeInterval,
 
       devicesIsPending,
@@ -367,7 +368,7 @@ export class Dashboard extends Component {
                 <Grid>
                   <Cell  className="col-8">
                     <InsightsPanel
-                    imageEvent={telemetry.length > 0 ? telemetry.find(x => x.data.hasOwnProperty('url')): null}
+                    imageEvent={telemetry.length > 0 ? telemetry.find(x => x.deviceId === activeDeviceId && x.data.hasOwnProperty('url')): null}
                     error={rulesError || analyticsError}
                     t={t} />
                   </Cell>
@@ -381,7 +382,7 @@ export class Dashboard extends Component {
             </Cell>
             <Cell className="col-3">
               <EventsPanel
-                events={telemetry.length > 0 ? telemetry.filter(x => x.data.hasOwnProperty('orEvent')): []}
+                events={telemetry.length > 0 ? telemetry.filter(x => x.deviceId === activeDeviceId && x.data.hasOwnProperty('orEvent')): []}
                 isPending={analyticsIsPending || rulesIsPending}
                 error={rulesError || analyticsError}
                 t={t}

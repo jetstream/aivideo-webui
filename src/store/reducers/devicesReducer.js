@@ -76,7 +76,11 @@ const deviceListSchema = new schema.Array(deviceSchema);
 // ========================= Schemas - END
 
 // ========================= Reducers - START
-const initialState = { ...errorPendingInitialState, entities: {}, items: [], lastUpdated: '' };
+const initialState = { ...errorPendingInitialState, entities: {}, items: [], lastUpdated: '', activeDeviceId: undefined };
+
+const updateActiveDeviceReducer = (state, { payload }) => update(state,
+  { activeDeviceId: { $set: payload } }
+);
 
 const updateDevicesReducer = (state, { payload, fromAction }) => {
   const { entities: { devices }, result } = normalize(payload, deviceListSchema);
@@ -186,6 +190,7 @@ export const redux = createReducerScenario({
   isFetching: { multiType: fetchableTypes, reducer: pendingReducer },
   deleteDevices: { type: 'DEVICE_DELETE', reducer: deleteDevicesReducer },
   insertDevices: { type: 'DEVICE_INSERT', reducer: insertDevicesReducer },
+  updateActiveDevice: { type: 'APP_ACTIVE_DEVICE_UPDATE', reducer: updateActiveDeviceReducer },
   updateTags: { type: 'DEVICE_UPDATE_TAGS', reducer: updateTagsReducer },
   updateProperties: { type: 'DEVICE_UPDATE_PROPERTIES', reducer: updatePropertiesReducer },
   updateModuleStatus: { type: 'DEVICE_MODULE_STATUS', reducer: updateModuleStatusReducer },
@@ -196,6 +201,7 @@ export const reducer = { devices: redux.getReducer(initialState) };
 // ========================= Reducers - END
 
 // ========================= Selectors - START
+export const getActiveDeviceId = state => getDevicesReducer(state).activeDeviceId;
 export const getDevicesReducer = state => state.devices;
 export const getEntities = state => getDevicesReducer(state).entities || {};
 export const getItems = state => getDevicesReducer(state).items || [];
