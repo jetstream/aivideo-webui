@@ -184,7 +184,8 @@
         "header": "Raw events from AI on edge device"
       },
       "insights": {
-        "header": "Insights from video stream on device"
+        "header": "Insights from video stream on device",
+        "selectADevicePrompt": "Select a device"
       },
       "rules": {
         "header": "Alerts from rules"

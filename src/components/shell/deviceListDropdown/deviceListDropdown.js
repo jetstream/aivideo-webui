@@ -10,7 +10,6 @@ import './deviceListDropdown.scss';
 export class DeviceListDropdown extends Component {
 
   onChange = (deviceIds) => (value) => {
-    console.log("CHANGE DEVICE", value);
     //this.props.logEvent(toDiagnosticsModel('DeviceListFilter_Select', {}));
     // Don't try to update the device list if the device id doesn't exist
     if (deviceIds.indexOf(value) > -1) {
@@ -19,13 +18,13 @@ export class DeviceListDropdown extends Component {
     //this.props.logEvent(toDiagnosticsModel('DeviceFilter_Select', {}));
   }
 
-  devicesToOptions = devices => devices
-    .map(({ id }) => ({ label: id, value: id }));
+  devicesToOptions = deviceIds => deviceIds
+    .map(( value ) => ({ label: value, value: value }));
 
 
   render() {
-    const { devices, activeDeviceId } = this.props;
-    const deviceIds = devices.map(({ id }) => id);
+    const { devices, activeDeviceId, selectDevicePrompt } = this.props;
+    const deviceIds = activeDeviceId ? devices.map(({ id }) => id) : [selectDevicePrompt].concat(devices.map(({ id }) => id));
 
     return (
       <SelectInput
@@ -40,7 +39,7 @@ export class DeviceListDropdown extends Component {
             className: "device-list-dropdown-chevron",
           },
         }}
-        options={this.devicesToOptions(devices)}
+        options={this.devicesToOptions(deviceIds)}
         value={activeDeviceId}
         onChange={this.onChange(deviceIds)} />
     );
