@@ -28,7 +28,7 @@ export class EventsPanel extends Component {
       {
         headerName: 'rules.grid.eventName',
         field: 'data.orEvent',
-        cellRendererFramework: undefined, // Hide soft select link
+        cellRendererFramework: ({value}) => {  return value ? value : "image update" },
         filter: 'text',
       },
       {

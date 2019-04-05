@@ -382,7 +382,7 @@ export class Dashboard extends Component {
             </Cell>
             <Cell className="col-3">
               <EventsPanel
-                events={telemetry.length > 0 ? telemetry.filter(x => x.deviceId === activeDeviceId && x.data.hasOwnProperty('orEvent')): []}
+                events={telemetry.length > 0 ? telemetry.filter(x => x.deviceId === activeDeviceId): []}
                 isPending={analyticsIsPending || rulesIsPending}
                 error={rulesError || analyticsError}
                 t={t}
