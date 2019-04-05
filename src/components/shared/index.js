@@ -3,6 +3,7 @@
 // Exports the shared react components into as a library
 
 export * from './ajaxError/ajaxError';
+export * from './compactGrid/compactGrid';
 export * from './componentArray/componentArray';
 export * from './contextMenu';
 export * from './deleteModal/deleteModal';

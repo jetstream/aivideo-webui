@@ -12,9 +12,10 @@ import {
   PanelMsg,
   PanelOverlay
 } from 'components/pages/dashboard/panel';
-import { RulesGrid, rulesColumnDefs } from 'components/pages/rules/rulesGrid';
+import { CompactGrid } from 'components/shared';
 import { toDiagnosticsModel } from 'services/models';
 import { translateColumnDefs } from 'utilities';
+import { formatTime } from 'utilities';
 
 import './rulesPanel.scss';
 
@@ -25,13 +26,21 @@ export class RulesPanel extends Component {
 
     this.columnDefs = [
       {
-        ...rulesColumnDefs.ruleName,
+        headerName: 'rules.grid.ruleName',
+        field: 'name',
+        sort: 'asc',
+        filter: 'text',
+        cellRendererFramework: undefined
       },
       {
-        ...rulesColumnDefs.severity
+        headerName: 'rules.grid.severity',
+        field: 'severity',
+        filter: 'text',
       },
       {
-        ...rulesColumnDefs.lastTrigger,
+        headerName: 'rules.grid.eventTime',
+        field: 'lastTrigger.response',
+        cellRendererFramework: ({value}) => formatTime(value)
       }
     ];
   }
@@ -50,7 +59,10 @@ export class RulesPanel extends Component {
       t: this.props.t,
       deviceGroups: this.props.deviceGroups,
       refresh: fetchRules,
-      logEvent: this.props.logEvent
+      logEvent: this.props.logEvent,
+      pagination: true,
+      paginationPageSize: 5
+
     };
     const showOverlay = isPending && !rules.length;
 
@@ -60,7 +72,7 @@ export class RulesPanel extends Component {
           <PanelHeaderLabel>{t('dashboard.panels.rules.header')}</PanelHeaderLabel>
         </PanelHeader>
         <PanelContent>
-        <RulesGrid {...gridProps} />
+        <CompactGrid {...gridProps} />
           {
             (!showOverlay && rules.length === 0)
               && <PanelMsg>{t('dashboard.noData')}</PanelMsg>

@@ -12,10 +12,12 @@ import {
   PanelMsg,
   PanelOverlay
 } from 'components/pages/dashboard/panel';
-import { TimeRenderer } from 'components/shared/cellRenderers';
-import { RulesGrid } from 'components/pages/rules/rulesGrid';
+import { CompactGrid } from 'components/shared';
 import { toDiagnosticsModel } from 'services/models';
 import { translateColumnDefs } from 'utilities';
+import { formatTime } from 'utilities';
+
+import './eventsPanel.scss';
 
 export class EventsPanel extends Component {
 
@@ -33,7 +35,7 @@ export class EventsPanel extends Component {
         sort: 'desc',
         headerName: 'rules.grid.eventTime',
         field: 'time',
-        cellRendererFramework: TimeRenderer
+        cellRendererFramework: ({value}) => formatTime(value)
       }
     ];
   }
@@ -52,6 +54,8 @@ export class EventsPanel extends Component {
       suppressFlyouts: true,
       domLayout: 'autoHeight',
       deltaRowDataMode: false,
+      pagination: true,
+      paginationPageSize: 16,
       t
     };
     const showOverlay = isPending && !events.length;
@@ -62,7 +66,7 @@ export class EventsPanel extends Component {
           <PanelHeaderLabel>{t('dashboard.panels.events.header')}</PanelHeaderLabel>
         </PanelHeader>
         <PanelContent>
-          <RulesGrid {...gridProps} />
+          <CompactGrid {...gridProps} />
           {
             (!showOverlay && events.length === 0)
               && <PanelMsg>{t('dashboard.noData')}</PanelMsg>
