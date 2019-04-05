@@ -24,7 +24,10 @@ export class DeviceListDropdown extends Component {
 
   render() {
     const { devices, activeDeviceId, selectDevicePrompt } = this.props;
-    const deviceIds = activeDeviceId ? devices.map(({ id }) => id) : [selectDevicePrompt].concat(devices.map(({ id }) => id));
+    // filter out offline devices
+    const filteredDevicesIds = devices.filter((value) => { return value.connected; }).map(({ id }) => id);
+    // if we don't have an activeDevice, show "Select a device" as the first option
+    const deviceIds = activeDeviceId ? filteredDevicesIds : [selectDevicePrompt].concat(filteredDevicesIds);
 
     return (
       <SelectInput
