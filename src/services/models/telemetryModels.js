@@ -110,6 +110,7 @@ export const toMessagesModel = (response = {}) => getItems(response)
   .map((message = {}) => camelCaseReshape(message, {
     'data': 'data',
     'deviceId': 'deviceId',
+    'messageSchema': 'messageSchema',
     'time': 'time'
   }));
 
