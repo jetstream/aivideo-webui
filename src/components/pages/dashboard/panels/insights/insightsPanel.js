@@ -24,9 +24,9 @@ export class InsightsPanel extends Component {
   }
 
   render() {
-    const { t, error, imageEvent } = this.props;
+    const { t, error, image } = this.props;
 
-    if (!imageEvent) {
+    if (!image) {
       return (
         <Panel className="insights-panel-container">
         <PanelHeader>
@@ -51,7 +51,7 @@ export class InsightsPanel extends Component {
           <DeviceListDropdown />
         </PanelHeader>
         <PanelContent>
-          <img src={imageEvent.data.url} alt={imageEvent.data.url}></img>
+          <img src={image.url} alt={image.url}></img>
         </PanelContent>
         { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
       </Panel>

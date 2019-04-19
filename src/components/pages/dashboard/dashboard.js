@@ -34,6 +34,7 @@ const initialState = {
   telemetry: [],
   telemetryIsPending: true,
   telemetryError: null,
+  telemetryImage: null,
 
   // Analytics data
   analyticsVersion: 0,
@@ -242,6 +243,35 @@ export class Dashboard extends Component {
               // with the newer ones.
               : this.mergeAndTrimTelemetryMessages(
                   this.state.telemetry, telemetryState.telemetry.update);
+            const imageMessage = telemetry.length > 0
+              ? telemetry.find(x => x.deviceId === this.props.activeDeviceId && x.messageSchema === 'image-upload:v1')
+              : null;
+            if (imageMessage) {
+              // ignore poorly formed messages
+              if (imageMessage.data.cameraId && imageMessage.data.time && imageMessage.data.type) {
+                const imageUrl = imageMessage.data.cameraId + "/"
+                  + imageMessage.data.time + "."
+                  + imageMessage.data.type;
+                const getImageUrl = TelemetryService.getBlobAccessUrl(imageUrl);
+                getImageUrl.subscribe(
+                  (result) => {
+                    let j = 0;
+                    const newImage = {
+                      'url': result,
+                      'cameraId': imageMessage.data.cameraId,
+                      'time': imageMessage.data.time,
+                      'type': imageMessage.data.type
+                    }
+                    this.setState( { telemetryImage: newImage });
+                  },
+                  error => {
+                    this.setState( { telemetryImage: null });
+                  }
+                );
+                          } else {
+                this.setState( { telemetryImage: null });
+              }
+            }
             this.setState(
               {
                 telemetry: telemetry,
@@ -327,6 +357,7 @@ export class Dashboard extends Component {
       analyticsError,
 
       telemetry,
+      telemetryImage,
 
       lastRefreshed
     } = this.state;
@@ -368,7 +399,7 @@ export class Dashboard extends Component {
                 <Grid>
                   <Cell  className="col-8">
                     <InsightsPanel
-                    imageEvent={telemetry.length > 0 ? telemetry.find(x => x.deviceId === activeDeviceId && x.data.hasOwnProperty('url')): null}
+                    image={ telemetryImage }
                     error={rulesError || analyticsError}
                     t={t} />
                   </Cell>

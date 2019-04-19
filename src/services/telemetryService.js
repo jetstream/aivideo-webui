@@ -85,6 +85,12 @@ export class TelemetryService {
     return HttpClient.post(`${ENDPOINT}alarms!delete`, request);
   }
 
+  /** Returns a SAS url for blob access */
+  static getBlobAccessUrl(blobName) {
+    var req = ENDPOINT + 'blobAccess?container=' + Config.stillImagesBlobContainer + '&name=' + blobName;
+    return HttpClient.get(req);
+  }
+
   /** Returns a telemetry events */
   static getTelemetryByMessages(params = {}) {
     var body = toTelemetryRequestModel(params);

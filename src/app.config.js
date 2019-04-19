@@ -22,6 +22,7 @@ const Config = {
     deploymentPriority: 'https://docs.microsoft.com/en-us/azure/iot-edge/module-deployment-monitoring#priority'
   },
   // Constants
+  stillImagesBlobContainer: 'still-images',
   showWalkthroughExamples: false,
   defaultAjaxTimeout: 20000, // 20s
   maxRetryAttempts: 2,
