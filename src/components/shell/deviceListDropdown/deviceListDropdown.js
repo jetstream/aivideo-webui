@@ -18,16 +18,24 @@ export class DeviceListDropdown extends Component {
     //this.props.logEvent(toDiagnosticsModel('DeviceFilter_Select', {}));
   }
 
-  devicesToOptions = deviceIds => deviceIds
+  camerasToOptions = camIds => camIds
     .map(( value ) => ({ label: value, value: value }));
 
 
   render() {
     const { devices, activeDeviceId, selectDevicePrompt } = this.props;
-    // filter out offline devices
-    const filteredDevicesIds = devices.filter((value) => { return value.connected; }).map(({ id }) => id);
-    // if we don't have an activeDevice, show "Select a device" as the first option
-    const deviceIds = activeDeviceId ? filteredDevicesIds : [selectDevicePrompt].concat(filteredDevicesIds);
+
+    const cameras = devices.reduce(function(total, currentItem, currentIndex, arr) {
+      // do we need to filter out offline devices?
+      if(currentItem.tags.hasOwnProperty('cameras')) {
+        Object.entries(currentItem.tags.cameras).forEach(([key, value]) =>  total.push(value.semanticId));
+      }
+      return total;
+    }, []);
+    //console.log("cameras: ", cameras);
+
+    // if we don't have an activeDevice, show "Select a camera" as the first option
+    const cameraIds = activeDeviceId ? cameras : [selectDevicePrompt].concat(cameras);
 
     return (
       <SelectInput
@@ -42,9 +50,9 @@ export class DeviceListDropdown extends Component {
             className: "device-list-dropdown-chevron",
           },
         }}
-        options={this.devicesToOptions(deviceIds)}
+        options={this.camerasToOptions(cameraIds)}
         value={activeDeviceId}
-        onChange={this.onChange(deviceIds)} />
+        onChange={this.onChange(cameraIds)} />
     );
   }
 }
