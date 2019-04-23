@@ -255,7 +255,6 @@ export class Dashboard extends Component {
                 const getImageUrl = TelemetryService.getBlobAccessUrl(imageUrl);
                 getImageUrl.subscribe(
                   (result) => {
-                    let j = 0;
                     const newImage = {
                       'url': result,
                       'cameraId': imageMessage.data.cameraId,
