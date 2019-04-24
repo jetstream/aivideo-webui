@@ -18,7 +18,7 @@ const mapStateToProps = state => ({
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
-  changeDeviceGroup: (id) => dispatch(appRedux.actions.updateActiveDeviceGroup(id)),
+  changeDeviceGroup: (id) => dispatch(appRedux.actions.updateActiveCameraGroup(id)),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 

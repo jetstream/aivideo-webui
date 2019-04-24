@@ -185,7 +185,7 @@
       },
       "insights": {
         "header": "Insights from video stream",
-        "selectADevicePrompt": "Select a camera"
+        "selectCameraPrompt": "Select a camera"
       },
       "rules": {
         "header": "Alerts from rules"

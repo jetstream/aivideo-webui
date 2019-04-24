@@ -9,18 +9,18 @@ import {
 import {
   redux as deviceRedux,
   getDevices,
-  getActiveDeviceId
+  getActiveCameraId
 } from 'store/reducers/devicesReducer';
 import { DeviceListDropdown } from './deviceListDropdown';
 
 const mapStateToProps = state => ({
   devices: getDevices(state),
-  activeDeviceId: getActiveDeviceId(state)
+  activeCameraId: getActiveCameraId(state)
 });
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
-  changeSelectedDevice: (id) => dispatch(deviceRedux.actions.updateActiveDevice(id)),
+  changeSelectedCamera: (id) => dispatch(deviceRedux.actions.updateActiveCamera(id)),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 

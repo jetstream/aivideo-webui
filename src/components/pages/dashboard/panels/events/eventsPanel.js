@@ -27,7 +27,7 @@ export class EventsPanel extends Component {
     this.columnDefs = [
       {
         headerName: 'rules.grid.eventName',
-        field: 'data.orEvent',
+        field: 'data.recognition',
         cellRendererFramework: ({value}) => {  return value ? value : "image update" },
         filter: 'text',
       },

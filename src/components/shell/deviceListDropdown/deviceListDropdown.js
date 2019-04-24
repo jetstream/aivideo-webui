@@ -9,11 +9,11 @@ import './deviceListDropdown.scss';
 
 export class DeviceListDropdown extends Component {
 
-  onChange = (deviceIds) => (value) => {
+  onChange = (cameraIds) => (value) => {
     //this.props.logEvent(toDiagnosticsModel('DeviceListFilter_Select', {}));
-    // Don't try to update the device list if the device id doesn't exist
-    if (deviceIds.indexOf(value) > -1) {
-      this.props.changeSelectedDevice(value);
+    // Don't try to update the camera list if the camera id doesn't exist
+    if (cameraIds.indexOf(value) > -1) {
+      this.props.changeSelectedCamera(value);
     }
     //this.props.logEvent(toDiagnosticsModel('DeviceFilter_Select', {}));
   }
@@ -23,19 +23,18 @@ export class DeviceListDropdown extends Component {
 
 
   render() {
-    const { devices, activeDeviceId, selectDevicePrompt } = this.props;
+    const { devices, activeCameraId, selectCameraPrompt } = this.props;
 
-    const cameras = devices.reduce(function(total, currentItem, currentIndex, arr) {
+    const cameras = devices.reduce(function(allItems, currentItem) {
       // do we need to filter out offline devices?
       if(currentItem.tags.hasOwnProperty('cameras')) {
-        Object.entries(currentItem.tags.cameras).forEach(([key, value]) =>  total.push(value.semanticId));
+        Object.entries(currentItem.tags.cameras).forEach(([key, value]) =>  allItems.push(value.semanticId));
       }
-      return total;
+      return allItems;
     }, []);
-    //console.log("cameras: ", cameras);
 
-    // if we don't have an activeDevice, show "Select a camera" as the first option
-    const cameraIds = activeDeviceId ? cameras : [selectDevicePrompt].concat(cameras);
+    // if we don't have an activeCamera, show "Select a camera" as the first option
+    const cameraIds = activeCameraId ? cameras : [selectCameraPrompt].concat(cameras);
 
     return (
       <SelectInput
@@ -51,7 +50,7 @@ export class DeviceListDropdown extends Component {
           },
         }}
         options={this.camerasToOptions(cameraIds)}
-        value={activeDeviceId}
+        value={activeCameraId}
         onChange={this.onChange(cameraIds)} />
     );
   }

@@ -31,7 +31,7 @@ export class InsightsPanel extends Component {
         <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
-          <DeviceListDropdown selectDevicePrompt={t('dashboard.panels.insights.selectADevicePrompt')} />
+          <DeviceListDropdown selectCameraPrompt={t('dashboard.panels.insights.selectCameraPrompt')} />
         </PanelHeader>
         <PanelContent>
         {

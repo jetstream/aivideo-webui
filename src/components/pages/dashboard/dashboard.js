@@ -244,7 +244,7 @@ export class Dashboard extends Component {
               : this.mergeAndTrimTelemetryMessages(
                   this.state.telemetry, telemetryState.telemetry.update);
             const imageMessage = telemetry.length > 0
-              ? telemetry.find(x => x.deviceId === this.props.activeDeviceId && x.messageSchema === 'image-upload:v1')
+              ? telemetry.find(x => x.data.hasOwnProperty('cameraId') && x.data.cameraId === this.props.activeCameraId && x.messageSchema === 'image-upload:v1')
               : null;
             if (imageMessage) {
               // ignore poorly formed messages
@@ -337,7 +337,7 @@ export class Dashboard extends Component {
 
   render() {
     const {
-      activeDeviceId,
+      activeCameraId,
       timeInterval,
 
       devicesIsPending,
@@ -412,7 +412,7 @@ export class Dashboard extends Component {
             </Cell>
             <Cell className="col-3">
               <EventsPanel
-                events={telemetry.length > 0 ? telemetry.filter(x => x.deviceId === activeDeviceId): []}
+                events={activeCameraId && telemetry.length > 0 ? telemetry.filter(x => x.data.cameraId === activeCameraId): [] }
                 isPending={analyticsIsPending || rulesIsPending}
                 error={rulesError || analyticsError}
                 t={t}
