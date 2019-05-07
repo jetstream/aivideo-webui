@@ -34,7 +34,7 @@ export class EventsPanel extends Component {
       {
         sort: 'desc',
         headerName: 'rules.grid.eventTime',
-        field: 'time',
+        field: 'data.time',
         cellRendererFramework: ({value}) => formatTime(value)
       }
     ];
