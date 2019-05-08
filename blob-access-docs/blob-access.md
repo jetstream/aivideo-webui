@@ -67,10 +67,12 @@ This information is stored in the Module Twin's `desiredProperties`:
         "cam00": {
           "port": "USB\\VID_045E&PID_07A5&MI_02\\6&35184A9D&0&0002",
           "id": "bldg54/room2117/grid01x04look27"
+          "type": "usb"
         },
         "cam01": {
           "port": "USB\\VID_045E&PID_07A5",
           "id": "bldg54/room2117/grid01x04look27",
+          "type": "usb",
           "simulated": true
         }
       },
