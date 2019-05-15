@@ -23,15 +23,7 @@ export class DeviceListDropdown extends Component {
 
 
   render() {
-    const { devices, activeCameraId, selectCameraPrompt } = this.props;
-
-    const cameras = devices.reduce(function(allItems, currentItem) {
-      // do we need to filter out offline devices?
-      if(currentItem.tags.hasOwnProperty('cameras')) {
-        Object.entries(currentItem.tags.cameras).forEach(([key, value]) =>  allItems.push(value.semanticId));
-      }
-      return allItems;
-    }, []);
+    const { activeCameraId, selectCameraPrompt, cameras } = this.props;
 
     // if we don't have an activeCamera, show "Select a camera" as the first option
     const cameraIds = activeCameraId ? cameras : [selectCameraPrompt].concat(cameras);

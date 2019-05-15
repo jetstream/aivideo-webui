@@ -24,14 +24,16 @@ export class InsightsPanel extends Component {
   }
 
   render() {
-    const { t, error, image } = this.props;
+    const { t, error, image, cameras } = this.props;
 
     if (!image) {
       return (
         <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
-          <DeviceListDropdown selectCameraPrompt={t('dashboard.panels.insights.selectCameraPrompt')} />
+          <DeviceListDropdown
+            selectCameraPrompt={t('dashboard.panels.insights.selectCameraPrompt')}
+            cameras={ cameras } />
         </PanelHeader>
         <PanelContent>
         {
@@ -44,11 +46,12 @@ export class InsightsPanel extends Component {
     }
 
     return (
-
       <Panel className="insights-panel-container">
         <PanelHeader>
           <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
-          <DeviceListDropdown />
+          <DeviceListDropdown
+            selectCameraPrompt={t('dashboard.panels.insights.selectCameraPrompt')}
+            cameras={ cameras } />
         </PanelHeader>
         <PanelContent>
           <img src={image.url} alt={image.url}></img>

@@ -8,13 +8,11 @@ import {
 
 import {
   redux as deviceRedux,
-  getDevices,
   getActiveCameraId
 } from 'store/reducers/devicesReducer';
 import { DeviceListDropdown } from './deviceListDropdown';
 
 const mapStateToProps = state => ({
-  devices: getDevices(state),
   activeCameraId: getActiveCameraId(state)
 });
 

@@ -370,6 +370,12 @@ export class Dashboard extends Component {
       this.refreshRules();
     }
 
+    const cameraList = telemetry.reduce(function(allItems, currentItem) {
+      if(!allItems.includes(currentItem.data.cameraId))
+        allItems.push(currentItem.data.cameraId);
+      return allItems;
+    }, []);
+
     return (
       <ComponentArray>
         <ContextMenu>
@@ -399,6 +405,7 @@ export class Dashboard extends Component {
                   <Cell  className="col-8">
                     <InsightsPanel
                     image={ telemetryImage }
+                    cameras= { cameraList }
                     error={rulesError || analyticsError}
                     t={t} />
                   </Cell>
