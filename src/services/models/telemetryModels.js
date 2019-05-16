@@ -106,13 +106,39 @@ export const toAlertForRuleModel = (alert = {}) => {
   });
 };
 
+// TSI has a bug that causes it to drop trailing zero character in
+// the data.time field, so we fix that here. Note that this fix
+// assumes the AIVideo time format 2019-05-16T21:02:56.870Z, with
+// exactly three decimal places of seconds.
 export const toMessagesModel = (response = {}) => getItems(response)
-  .map((message = {}) => camelCaseReshape(message, {
-    'data': 'data',
-    'deviceId': 'deviceId',
-    'messageSchema': 'messageSchema',
-    'time': 'time'
-  }));
+  .map((message = {}) => {
+    const result = camelCaseReshape(message, {
+      'data': 'data',
+      'deviceId': 'deviceId',
+      'messageSchema': 'messageSchema',
+      'time': 'time'
+      });
+    // Check if 'time' is present
+    const correctLength = 24;
+    if (result.data.time && result.data.time.length < correctLength) {
+      const missingChars = correctLength - result.data.time.length;
+      // Trim the trailing 'Z'
+      var adjustedValue = result.data.time.slice(0, -1);
+      switch (missingChars) {
+        case 1:
+        adjustedValue += '0Z';
+        break;
+        case 2:
+        adjustedValue += '00Z';
+        break;
+        case 4:
+        adjustedValue += '.000Z'
+        break;
+      }
+      result.data.time = adjustedValue;
+    }
+  return result;
+});
 
 export const toStatusModel = (response = {}) => camelCaseReshape(response, {
   'properties': 'properties'
