@@ -134,6 +134,7 @@ export const toMessagesModel = (response = {}) => getItems(response)
         case 4:
         adjustedValue += '.000Z'
         break;
+        default: break;
       }
       result.data.time = adjustedValue;
     }
