@@ -8,12 +8,11 @@ import {
   PanelContent,
   PanelError,
   PanelHeader,
-  PanelHeaderLabel,
-  PanelMsg
+  PanelHeaderLabel
 } from 'components/pages/dashboard/panel';
 import { toDiagnosticsModel } from 'services/models';
 import { DeviceListDropdownContainer as DeviceListDropdown } from 'components/shell/deviceListDropdown';
-
+import {InsightsImage} from './insightsImage'
 import './insightsPanel.scss';
 
 export class InsightsPanel extends Component {
@@ -26,25 +25,6 @@ export class InsightsPanel extends Component {
   render() {
     const { t, error, image, cameras } = this.props;
 
-    if (!image) {
-      return (
-        <Panel className="insights-panel-container">
-        <PanelHeader>
-          <PanelHeaderLabel>{t('dashboard.panels.insights.header')}</PanelHeaderLabel>
-          <DeviceListDropdown
-            selectCameraPrompt={t('dashboard.panels.insights.selectCameraPrompt')}
-            cameras={ cameras } />
-        </PanelHeader>
-        <PanelContent>
-        {
-          <PanelMsg>{t('dashboard.noData')}</PanelMsg>
-        }
-        </PanelContent>
-        { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
-      </Panel>
-      );
-    }
-
     return (
       <Panel className="insights-panel-container">
         <PanelHeader>
@@ -54,7 +34,9 @@ export class InsightsPanel extends Component {
             cameras={ cameras } />
         </PanelHeader>
         <PanelContent>
-          <img src={image.url} alt={image.url}></img>
+          <InsightsImage
+            image={ image }
+            t={t} />
         </PanelContent>
         { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }
       </Panel>
