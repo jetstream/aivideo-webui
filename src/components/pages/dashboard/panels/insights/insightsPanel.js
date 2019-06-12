@@ -12,7 +12,7 @@ import {
 } from 'components/pages/dashboard/panel';
 import { toDiagnosticsModel } from 'services/models';
 import { DeviceListDropdownContainer as DeviceListDropdown } from 'components/shell/deviceListDropdown';
-import {InsightsImage} from './insightsImage'
+import {InsightsImage} from './insightsImage';
 import './insightsPanel.scss';
 
 export class InsightsPanel extends Component {
@@ -23,7 +23,7 @@ export class InsightsPanel extends Component {
   }
 
   render() {
-    const { t, error, image, cameras } = this.props;
+    const { t, error, image, cameras, boundingBoxes } = this.props;
 
     return (
       <Panel className="insights-panel-container">
@@ -36,6 +36,7 @@ export class InsightsPanel extends Component {
         <PanelContent>
           <InsightsImage
             image={ image }
+            boundingBoxes={ boundingBoxes }
             t={t} />
         </PanelContent>
         { error && <PanelError><AjaxError t={t} error={error} /></PanelError> }

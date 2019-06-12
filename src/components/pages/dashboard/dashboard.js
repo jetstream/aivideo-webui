@@ -261,14 +261,19 @@ export class Dashboard extends Component {
                       'time': imageMessage.data.time,
                       'type': imageMessage.data.type
                     }
-                    this.setState( { telemetryImage: newImage });
+                    this.setState( { telemetryImage: newImage } );
+                    // filter out telemetry messages of schema recognition:v1 with the same camera and time
+                    const boundingBoxes = telemetry.filter(x => x.messageSchema === 'recognition:v1' && x.data.cameraId === imageMessage.data.cameraId && x.data.time === imageMessage.data.time);
+                    this.setState( { telemetryBoundingBoxes: boundingBoxes } );
                   },
                   error => {
-                    this.setState( { telemetryImage: null });
+                    this.setState( { telemetryImage: null } );
+                    this.setState( { telemetryBoundingBoxes: null } );
                   }
                 );
                           } else {
-                this.setState( { telemetryImage: null });
+                this.setState( { telemetryImage: null } );
+                this.setState( { telemetryBoundingBoxes: null } );
               }
             }
             this.setState(
@@ -357,6 +362,7 @@ export class Dashboard extends Component {
 
       telemetry,
       telemetryImage,
+      telemetryBoundingBoxes,
 
       lastRefreshed
     } = this.state;
@@ -404,9 +410,10 @@ export class Dashboard extends Component {
                 <Grid>
                   <Cell  className="col-8">
                     <InsightsPanel
-                    image={ telemetryImage }
+                    image= { telemetryImage }
+                    boundingBoxes= { telemetryBoundingBoxes }
                     cameras= { cameraList }
-                    error={rulesError || analyticsError}
+                    error= {rulesError || analyticsError}
                     t={t} />
                   </Cell>
                   <Cell className="col-8">
