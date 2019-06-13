@@ -7,7 +7,6 @@ import './insightsImage.scss';
 export class InsightsImage extends Component {
 
   handleImageLoaded() {
-    //console.log("BBS", this.props.boundingBoxes);
     const imgWidth =  this.refs.imageRef.width;
     const imgHeight = this.refs.imageRef.height;
     this.refs.canvasRef.width = imgWidth;
@@ -15,22 +14,40 @@ export class InsightsImage extends Component {
     const canvasContext = this.refs.canvasRef.getContext("2d");
 
     this.props.boundingBoxes.forEach((bb) => {
-      //console.log("Drawing", bb.data.bbxmin, bb.data.bbymin, bb.data.bbxmax, bb.data.bbymax);
-      const bbymin = bb.data.bbymin; //0.37305212020874023;
-      const bbxmin = bb.data.bbxmin; //0.59874922037124634;
-      const bbymax = bb.data.bbymax; //0.57989329099655151;
-      const bbxmax = bb.data.bbxmax; //0.68968445062637329;
+      const bbymin = bb.data.bbymin;
+      const bbxmin = bb.data.bbxmin;
+      const bbymax = bb.data.bbymax;
+      const bbxmax = bb.data.bbxmax;
 
-      // RED
-      const x = imgWidth * bbxmin;
-      const y = imgHeight * bbymin;
-      const width = imgWidth * (bbxmax - bbxmin);
-      const height = imgHeight * (bbymax - bbymin);
+      var x = imgWidth * bbxmin;
+      var y = imgHeight * bbymin;
+      var width = imgWidth * (bbxmax - bbxmin);
+      var height = imgHeight * (bbymax - bbymin);
 
-      canvasContext.strokeStyle = "#FF0000";
-      canvasContext.strokeRect(x, y, width, height);
+      // draw the bounding box
+      canvasContext.strokeStyle = "#517B82";
       canvasContext.lineWidth = 2;
+      canvasContext.strokeRect(x, y, width, height);
 
+      // the label
+      const labelHeight = 15;
+      const padding = 4;
+      const text = bb.data.cls + " | " + bb.data.score.toFixed(3);
+      x = x-padding;
+      y = y-labelHeight-(padding*2);
+      // Draw the label
+      const labelWidth = canvasContext.measureText(text).width + (padding*2);
+      canvasContext.fillStyle = "#517B82"
+      canvasContext.fillRect(x, y, labelWidth, labelHeight+(padding*2));
+      // Draw the border
+      canvasContext.lineWidth = 1;
+      canvasContext.strokeStyle = "#41474b";
+      canvasContext.strokeRect(x, y, labelWidth, labelHeight+(padding*2));
+      // write the label
+      canvasContext.textBaseline = "top";
+      canvasContext.lineWidth = 0.25;
+      canvasContext.strokeStyle = "#FFFFFF";
+      canvasContext.strokeText(text, x+padding, y+(padding*2));
     });
   }
 
