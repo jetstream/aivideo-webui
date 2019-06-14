@@ -5,8 +5,8 @@
 :: scripts\docker\run testing : Starts the testing version
 
 :: Note: use lowercase names for the Docker images
-SET DOCKER_IMAGE=aivideo/pcs-remote-monitoring-webui
-SET STABLE_VERSION=1.0.0-preview
+SET DOCKER_IMAGE=azureaivideo/pcs-remote-monitoring-webui
+SET STABLE_VERSION=3.0.0
 
 IF "%1"=="" goto :STABLE
 IF "%1"=="testing" goto :TESTING
